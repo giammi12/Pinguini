@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Che pinguino è?</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 520px; margin: 2rem auto; padding: 0 1rem; color: #1f2937; }
+    h1 { font-size: 1.6rem; }
+    label { display: block; margin-top: .9rem; font-weight: 600; }
+    input { width: 100%; padding: .55rem; margin-top: .25rem; font-size: 1rem; box-sizing: border-box; }
+    small { color: #6b7280; font-weight: 400; }
+    button { margin-top: 1.2rem; padding: .7rem 1.2rem; font-size: 1rem; cursor: pointer; }
+    .box { margin-top: 1.5rem; padding: 1rem; border-radius: 8px; }
+    .ok { background: #ecfdf5; border: 1px solid #10b981; }
+    .err { background: #fef2f2; border: 1px solid #ef4444; }
+  </style>
+</head>
+<body>
+  <h1>🐧 Che pinguino è?</h1>
+  <p>Inserisci le misure del pinguino: il modello k-NN prevederà la specie.</p>
+
+  <form method="post">
+    <label>Lunghezza del becco (mm)
+      <input name="bill_length_mm" required inputmode="decimal" value="{{ valori.get('bill_length_mm', '') }}">
+      <small>da {{ limiti.bill_length_mm[0] }} a {{ limiti.bill_length_mm[1] }}</small></label>
+    <label>Profondità del becco (mm)
+      <input name="bill_depth_mm" required inputmode="decimal" value="{{ valori.get('bill_depth_mm', '') }}">
+      <small>da {{ limiti.bill_depth_mm[0] }} a {{ limiti.bill_depth_mm[1] }}</small></label>
+    <label>Lunghezza della pinna (mm)
+      <input name="flipper_length_mm" required inputmode="decimal" value="{{ valori.get('flipper_length_mm', '') }}">
+      <small>da {{ limiti.flipper_length_mm[0] }} a {{ limiti.flipper_length_mm[1] }}</small></label>
+    <label>Peso (g)
+      <input name="body_mass_g" required inputmode="decimal" value="{{ valori.get('body_mass_g', '') }}">
+      <small>da {{ limiti.body_mass_g[0] }} a {{ limiti.body_mass_g[1] }}</small></label>
+    <button type="submit">Prevedi la specie</button>
+  </form>
+
+  {% if errore %}
+    <div class="box err">⚠️ {{ errore }}</div>
+  {% endif %}
+
+  {% if risultato %}
+    <div class="box ok">
+      <strong>Specie prevista: {{ risultato.specie }}</strong>
+      <ul>
+        {% for nome, p in risultato.probabilita.items() %}
+          <li>{{ nome }}: {{ (p * 100)|round(0)|int }}%</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+</body>
+</html>

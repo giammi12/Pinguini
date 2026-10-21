@@ -1,0 +1,12 @@
+# Facoltativo: "Blueprint" per creare il servizio senza compilare il modulo a mano
+services:
+  - type: web
+    name: pinguini-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.3
